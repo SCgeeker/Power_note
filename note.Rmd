@@ -11,11 +11,14 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # 1 原理
 
+test
+
 # 2 应用 (思路1：按软件)
 
 
 ## 2.1 G*Power
 
+This is G*Power example
 
 ## 2.2 jPower
 
