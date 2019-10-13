@@ -1,0 +1,38 @@
+---
+title: "统计检验力（功效）分析"
+author: "Open Science China 共同写作群"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# 1 原理
+
+# 2 应用 (思路1：按软件)
+
+
+## 2.1 G*Power
+
+
+## 2.2 jPower
+
+
+## 2.3 ANOVAPower
+
+
+## 2.4 PANGEA
+
+
+## 2.5 LMM Power
+
+
+## 2.6 power analysis in fMRI
+
+
+## 2.7 Bayesian power analysis 
+
+
+# 2 应用 (思路2：按研究设计)
