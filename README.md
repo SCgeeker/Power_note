@@ -7,3 +7,7 @@
 
 ## 进阶共同编辑
 运用Rstudio + git。fork原始存库至个人github存库，编辑完成后再发送pull request推送回原始存库。
+
+- [scinapse文献清单](https://scinapse.io/collections/487408?share=copylink)
+
+- [使用Zotero及插件汇出文献bibtex code的示范影片](https://unimelb.libguides.com/c.php?g=565734&p=3897111)
