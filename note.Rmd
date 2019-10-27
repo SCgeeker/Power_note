@@ -9,16 +9,28 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# 1 原理
+```graphviz
+digraph hierarchy {
+                nodesep=1.0 // increases the separation between nodes
 
-test
+                node [color=Red,fontname=Courier,shape=box] //All nodes will this shape and colour
+                edge [color=Blue, style=dashed] //All the lines look like this
+
+                我要做那種power_analysis->{posthoc prior sensitivity}
+                prior->{有預期效果量及檢定力 有預期效果量及樣本數}
+                sensitivity->{有預期樣本數及檢定力}
+                {rank=same;有預期效果量及檢定力 有預期效果量及樣本數 有預期樣本數及檢定力}  // Put them on the same level
+}
+```
+
+
+# 1 原理
 
 # 2 应用 (思路1：按软件)
 
 
 ## 2.1 G*Power
 
-This is G*Power example
 
 ## 2.2 jPower
 
