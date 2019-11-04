@@ -1,5 +1,5 @@
 ---
-title: "统计检验力（功效）分析"
+title: "统计检验力（功效）分析共同笔记"
 author: "Open Science China 共同写作群"
 date: "`r Sys.Date()`"
 output: html_document
@@ -9,6 +9,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# 0 工作起点
+
 ```graphviz
 digraph hierarchy {
                 nodesep=1.0 // increases the separation between nodes
@@ -16,17 +18,155 @@ digraph hierarchy {
                 node [color=Red,fontname=Courier,shape=box] //All nodes will this shape and colour
                 edge [color=Blue, style=dashed] //All the lines look like this
 
-                我要做那種power_analysis->{posthoc prior sensitivity}
-                prior->{有預期效果量及檢定力 有預期效果量及樣本數}
-                sensitivity->{有預期樣本數及檢定力}
-                {rank=same;有預期效果量及檢定力 有預期效果量及樣本數 有預期樣本數及檢定力}  // Put them on the same level
+                我要做那种power_analysis->{posthoc prior sensitivity}
+                prior->{有预期效应量及检验力 有预期效应量及样本数}
+                sensitivity->{有预期样本数及检验力}
+                {rank=same;有预期效应量及检验力 有预期效应量及样本数 有预期效应量及检验力 有预期样本数及检验力}  // Put them on the same level
 }
 ```
 
 
-# 1 原理
+# 1 研究设计(依变量类型分类)
 
-# 2 应用 (思路1：按软件)
+- 参考[statkat](https://statkat.com/stattest_overview.php)
+
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+.tg .tg-cly1{text-align:left;vertical-align:middle}
+.tg .tg-baqh{text-align:center;vertical-align:top}
+.tg .tg-nrix{text-align:center;vertical-align:middle}
+.tg .tg-0lax{text-align:left;vertical-align:top}
+</style>
+<table class="tg">
+  <tr>
+    <th class="tg-cly1"></th>
+    <th class="tg-nrix" colspan="5">依变量或第二变量</th>
+  </tr>
+  <tr>
+    <td class="tg-nrix">独变量或第一变量</td>
+    <td class="tg-nrix">有两组被试单一类别变量<br></td>
+    <td class="tg-nrix">有三组以上被试单一类别变量</td>
+    <td class="tg-cly1">第一或第二变量是名义尺度</td>
+    <td class="tg-baqh">第一或第二变量是连续尺度</td>
+    <td class="tg-baqh">所有变量都是连续尺度</td>
+  </tr>
+  <tr>
+    <td class="tg-0lax">无</td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+  </tr>
+  <tr>
+    <td class="tg-0lax">相依样本<br></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+  </tr>
+  <tr>
+    <td class="tg-0lax">有两组被试单一类别变量</td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+  </tr>
+  <tr>
+    <td class="tg-0lax">有三组以上被试单一类别变量</td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+  </tr>
+  <tr>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+  </tr>
+  <tr>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+  </tr>
+  <tr>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+  </tr>
+  <tr>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+  </tr>
+  <tr>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+  </tr>
+  <tr>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+  </tr>
+  <tr>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+  </tr>
+  <tr>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+  </tr>
+  <tr>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+  </tr>
+  <tr>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+    <td class="tg-0lax"></td>
+  </tr>
+</table>
+
+# 2 可用软件
 
 
 ## 2.1 G*Power
@@ -50,4 +190,3 @@ digraph hierarchy {
 ## 2.7 Bayesian power analysis 
 
 
-# 2 应用 (思路2：按研究设计)
