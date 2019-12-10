@@ -354,7 +354,7 @@ design_result <- ANOVA_design(design = "2b*2w",
 ```
 
 ```{r}
-nsims <- 1000 # 注：此处根据实际需要可修改
+nsims <- 1000 # 注：此处根据实际需要修改，例如上文提到的先设定成100，如果正确的话再修改为1000
 power_result_vig_1 <- ANOVA_power(design_result, 
                                    alpha = 0.05, 
                                    nsims = nsims, 
@@ -388,6 +388,71 @@ power_result_vig_1$plot1
 统计检验力模拟的结果显示情绪的主效应的统计检验力最高。因为情绪是被试内因素,并且平均数高度相关（0.8），所以针对被试内的对比，我们拥有较高的统计检验力。针对交互作用，统计检验力较低，并且声音的主效应非常低。
 
 ANOVA通常的后续为事后比较。统计假设通常不只预测交互作用存在，还预测交互作用的方向。如上图所示，我们可能只对高兴和悲伤的类人声声音助理的独立效应和悲伤的类机器人和类人的声音的差异感兴趣。第二个表格显示了针对所有事后比较的*t*检验的统计检验力和效应量（针对被试间对比为Cohen's d，针对被试内对比为Cohen's $d_z$，针对被试内对比，见Lakens, 2013）。
+
+通常针对被试内因素，不同实验条件下的差异的统计检验力比较高， 而对于相似的平均数（例如，1.03，0.98和1.01）之间的微小差异的统计检验力非常低。除以上两个表格之外，ANOVA_power函数可以返回初始的模拟数据（针对每一个模拟的*p*值和效应量，见simulation_result$sim_data）和包含所有ANOVA检验中的*p*值分布的图表。
+
+#### 2.3.3.4 两组 One-Way ANOVA的统计检验力
+
+假设我们计划设计一个研究来检验如下假设：照顾宠物可以提升人们的生活满意度。我们有一个控制组和一个实验组（被试有一个需要照顾的宠物），将被试随机分配到这两种组别中。我们可以模拟一个设定了alpha，样本量和效应量的One-Way ANOVA，来计算相应的统计检验力。我们预期相比于控制组，实验组中的宠物可以提升被试的生活满意度。基于Pavot和Diener（1993）的工作成果，我们相信在总体中针对生活满意度的测量均值约为24，标准差约为6.4。我们期望针对拥有宠物的被试，宠物约可以提升2.2的生活满意度分数。我们计划一共收集200个被试的数据，每一个实验条件下随机分配100名被试。我们通过如下步骤来检验这个实验设计的统计检验力：
+
+
+```{r}
+design <- "2b"
+n <- 100
+mu <- c(24, 26.2)
+sd <- 6.4
+labelnames <- c("condition", "control", "pet") #
+
+design_result <- ANOVA_design(design = design,
+                              n = n,
+                              mu = mu, 
+                              sd = sd, 
+                              labelnames = labelnames)
+```
+
+
+
+```{r}
+nsims <- 1000 # 注：此处根据实际需要修改，例如上文提到的先设定成100，如果正确的话再修改为1000
+
+power_result_vig_2 <- ANOVA_power(design_result, nsims = nsims, seed = 1234)
+# 
+# reduce file size for github - only save what is needed
+power_result_vig_2$sim_data <- NULL
+# power_result_vig_2$plot1 <- NULL
+power_result_vig_2$plot2 <- NULL
+saveRDS(power_result_vig_2, file = "D:/temp/power_result_vig_2.rds")
+power_result_vig_2 <- readRDS(file = "D:/temp/power_result_vig_2.rds")
+
+#Note we do not specify any correlation in the ANOVA_design function (default r = 0), nor do we specify an alpha in the ANOVA_power function (default is 0.05)
+```
+结果显示针对ANOVA，我们有和*t*检验一样的统计检验力结果，原因是在这个例子中只有2组被试。在这个研究中，每一组有100名被试，相应的统计检验力相对来说很低（在67.7%左右）。
+
+只有两组被试的ANOVA和*t*检验是一样的，在上述例子中，针对控制组和实验组差异的Cohen's d（标准均差）是d = 2.2/6.4 = 0.34375，可以很容易地通过`pwr`包来计算简单比较的预期的统计检验力。
+
+```{r}
+library(pwr)
+pwr.t.test(d = 2.2/6.4,
+           n = 100,
+           sig.level = 0.05,
+           type="two.sample",
+           alternative="two.sided")$power
+```
+
+我们也可以通过两个组别的Cohen's d来直接计算Cohen's f，正如Cohen（1988）所描述，$f = \frac{1}{2}d$。所以$f = 0.5*0.34375 = 0.171875$。事实上，使用`pwr`包中`pwr.anova.test`所计算的统计检验力与`power.t.test`结果一致。
+
+```{r}
+pwr.anova.test(n = 100,
+               k = 2,
+               f = 0.171875,
+               sig.level = 0.05)$power
+```
+
+以上分析表明使用每组包含100名被试的实验设定不太会导致显著的统计结果，即使我们所期望的差异是真实存在的。这显然不是最优的结果。如果我们进行一项研究，我们希望可以得到信息丰富的结果，也就是说如果效应存在，我们就应该可以探测到所期望的或者所关心的这个效应；如果效应不存在，我们就应该探测不到这个效应。
+
+如果想达到足够的统计检验力，我们究竟需要多少被试呢？考虑到预期的差异和标准差，d = 0.34375，f = 0.171875。我们可以增大样本量进而进行模拟，直到满意为止。统计检验力与二型错误的概率密切相关。Cohen建议将所寻求的统计检验力的标准设为80%，即二型错误的概率为20%。我个人认为20%的二型错误概率太高，并且与设定地更加严格地一型错误概率（通常设定为5%）相比，不能很好地相平衡
+
+
 
 ## 2.4 PANGEA
 
