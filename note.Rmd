@@ -555,7 +555,102 @@ plot_power(design_result, min_n = 10, max_n = 250)
 
 #### 2.3.5.4 三组被试间设计的统计检验力
 
-假如我们计划设计一项研究来检验如下假设：照顾宠物可以提升人们的生活满意度。我们有一个控制组、一个宠物为猫的实验组和一个宠物为狗的实验组。我们可以模拟一个拥有设定的alpha、样本量和效应量的One-Way ANOVA来计算ANOVA和相应的事后比较的统计检验力。我们假设和控制组相比，所有的拥有宠物组都可以提升生活满意度。并且，我们假设
+假如我们计划设计一项研究来检验如下假设：照顾宠物可以提升人们的生活满意度。我们有一个控制组、一个宠物为猫的实验组和一个宠物为狗的实验组。我们可以模拟一个拥有设定的alpha、样本量和效应量的One-Way ANOVA来计算ANOVA和相应的事后比较的统计检验力。我们假设和控制组相比，所有的拥有宠物组都可以提升生活满意度。并且，我们假设养狗的被试比养猫的被试的生活满意度要高。基于Pavot和Diener（1993）的研究成果，我们再一次假设在总体中针对生活满意度的测量均值约为24，标准差约为6.4。我们期望猫作为宠物可提升生活满意度约2.2个点，狗作为宠物可提升生活满意度约2.6个点。作为开始，我们收集150名被试的数据，每组50人。但是在收集数据之前，我们先计算统计检验力来看是否可以检验到我们所期望的差异。
+
+```{r}
+design <- "3b"
+n <- 50
+mu <- c(24, 26.2, 26.6)
+sd <- 6.4
+labelnames <- c("condition", "control", "cat", "dog") #
+
+design_result <- ANOVA_design(design = design,
+                   n = n, 
+                   mu = mu, 
+                   sd = sd, 
+                   labelnames = labelnames)
+```
+
+```{r}
+ANOVA_exact(design_result)
+```
+
+结果显示，当每组有50个被试时，不论是总体的ANOVA（略低于50%）还是事后比较（控制组对比养猫组约为40%，控制组对比养狗组约为50%，养猫组和养狗组之间的差异的统计检验力极低，约为6%，只比一型错误率5%高一点点）统计检验力很低。我们可以很容易地使用`pwr`包来确认针对这些简单比较所期望的统计检验力。在我们的例子中，控制组和养猫组之间的差异的Cohen's d（标准均差）是$2.2/6.4 = 0.34375$，控制组和养狗组之间的差异的Cohen's d是$2.6/6.4 = 0.40625$，养猫组和养狗组之间的差异的Cohen's d是$0.4/6.4 = 0.0625$
+
+```{r}
+pwr.t.test(d = 2.2/6.4,
+           n = 50,
+           sig.level = 0.05,
+           type="two.sample",
+           alternative="two.sided")$power
+```
+
+```{r}
+pwr.t.test(d = 2.6/6.4,
+           n = 50,
+           sig.level = 0.05,
+           type="two.sample",
+           alternative="two.sided")$power
+```
+
+```{r}
+pwr.t.test(d = 0.4/6.4,
+           n = 50,
+           sig.level = 0.05,
+           type="two.sample",
+           alternative="two.sided")$power
+```
+
+很显然，我们需要更多的被试来提高统计检验力。让我们来画一个统计检验力随着样本量变化的曲线来看我们要增加多少样本。
+
+```{r}
+plot_power(design_result, min_n = 10, max_n = 250)
+```
+
+我们可以看出在拥有134名被试时，针对ANOVA我们可以得到约90%的统计检验力。但是我们也需要检查针对控制组和养猫组的比较的统计检验力。
+
+```{r}
+design <- "3b"
+n <- 134
+mu <- c(24, 26.2, 26.6)
+sd <- 6.4
+labelnames <- c("condition", "control", "cat", "dog") #
+
+design_result <- ANOVA_design(design = design,
+                   n = n, 
+                   mu = mu, 
+                   sd = sd, 
+                   labelnames = labelnames,
+                   plot = FALSE) #do not print the plot (same as above)
+
+ANOVA_exact(design_result)
+```
+
+```{r}
+n <- 180
+design_result <- ANOVA_design(design = design,
+                   n = n, 
+                   mu = mu, 
+                   sd = sd, 
+                   labelnames = labelnames,
+                   plot = FALSE) #do not print the plot (same as above)
+
+ANOVA_exact(design_result)
+```
+
+```{r}
+n <- 5380
+design_result <- ANOVA_design(design = design,
+                   n = n, 
+                   mu = mu, 
+                   sd = sd, 
+                   labelnames = labelnames,
+                   plot = FALSE) #do not print the plot (same as above)
+
+ANOVA_exact(design_result)
+```
+
+当每组有134名被试时，控制组和养猫组的简单比较的统计检验力只有80%。如果我们针对事后比较都想达到90%的统计检验力，我们需要更多的被试。180名被试可以为控制组和养猫组的事后比较提供较好的统计检验力。但是养猫组和养狗组之间差异的统计检验力极低。我们需要5380名被试来使得此事后比较组达到90%的统计检验力。如果收集数据很容易，那么达到5380名被试是可能的。但是如果数据收集的代价非常高，就使得我们不可能真正得到这个问题的可靠答案。明白不可能可靠地研究一个问题是分析先验统计检验力非常重要的一个方面。
 
 
 ## 2.4 PANGEA
