@@ -246,7 +246,7 @@ ANOVApower 的目的是帮助研究者容易简便地模拟 ANOVA 实验设计�
 如果这8个均值分别为 mu = c(1, 2, 3, 4, 5, 6, 7, 8)，则如下图所示：
 ```
 
-![示例](https://uploader.shimo.im/f/ffqL3yFf0lQ2wtse.png!thumbnail)
+![示例](https://raw.githubusercontent.com/Lakens/ANOVApower/master/README_files/figure-gfm/unnamed-chunk-1-1.png)
 
 (来自 [https://raw.githubusercontent.com/Lakens/ANOVApower/master/README_files/figure-gfm/unnamed-chunk-1-1.png](https://raw.githubusercontent.com/Lakens/ANOVApower/master/README_files/figure-gfm/unnamed-chunk-1-1.png))
 
@@ -651,6 +651,29 @@ ANOVA_exact(design_result)
 ```
 
 当每组有134名被试时，控制组和养猫组的简单比较的统计检验力只有80%。如果我们针对事后比较都想达到90%的统计检验力，我们需要更多的被试。180名被试可以为控制组和养猫组的事后比较提供较好的统计检验力。但是养猫组和养狗组之间差异的统计检验力极低。我们需要5380名被试来使得此事后比较组达到90%的统计检验力。如果收集数据很容易，那么达到5380名被试是可能的。但是如果数据收集的代价非常高，就使得我们不可能真正得到这个问题的可靠答案。明白不可能可靠地研究一个问题是分析先验统计检验力非常重要的一个方面。
+
+#### 2.3.5.5 重复测量ANOVA的统计检验力
+
+在重复测量设计中，多次的测量数据是从相同的被试来收集的。最简单的情境为有两个重复测量的数据，那么重复测量ANOVA等同于非独立样本或配对样本*t*检验。让我们来看一下此中相关对于重复测量ANOVA的统计检验力的影响。
+
+##### 2.3.5.5.1 样本内的两次测量的情况
+
+为解释相关观测的影响，我们由非独立（或配对、或被试内）*t*检验的中等效应量开始来模拟数据。我们首先来看G\*Power。假如我们想执行一个先验统计检验力分析，我们需要先提供效应量*d_Z*。正如Cohen（1988）所写，
+> 下角标Z是用来强调的初始数据的单位不再是X或者Y而是Z的事实
+
+Z是X-Y的差异数。
+
+![G*Power示例](https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_9.png)
+
+(来自 [https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_9.png](https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_9.png))
+
+因为数据之间是相关的，被试内设计比被试间设计在探测差异时拥有更高的统计检验力，并且因为每一个被试可提供多次观测数据，被试内设计需要更少的被试。独立样本*t*检验和非独立样本*t*检验的一个区别就是独立样本*t*检验的自由度为$2(n-1)$，而非独立样本*t*检验的自由度为$(n-1)$。假设正态分布且忽视两种检验类型在自由度上的不同，两组被试内设计（NW）的样本量相对于两组被试间设计（NB）的样本量为（由Maxwell和Delaney，2004，561页，公式45）：
+
+$$N_W = \frac{N_B(1-\rho)}{2}$$
+
+在公式中，除以2是因为
+
+
 
 
 ## 2.4 PANGEA
