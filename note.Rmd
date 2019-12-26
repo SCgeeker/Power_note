@@ -681,7 +681,27 @@ $$\sigma_Z=\sigma\sqrt{2(1-\rho)}$$
 
 > 用另一种说法来说，一个针对配对（非独立）样本的总体平均数之间的给定差异是由与其样本独立时的一样大的$\sqrt{2(1-\rho)}$这个值标准化的。
 
-如果我们将相关设定为0.5，则$\sqrt{2(0.5)}=1$。当相关为0.5时，$d=d_Z$。当变量间相关变强时，例如$r=0.9$，我们可以得到$d=d_Z\sqrt{2(1-0.9)}$，当$d_Z$为1时，$d=0.45$。反过来，$d_Z=\frac{d}{\sqrt{2(1-r)}}$，所以当$r=0.9，d=1$时，我们可以得到$d_Z=2.24$。一些观点认为，与d相比，
+如果我们将相关设定为0.5，则$\sqrt{2(0.5)}=1$。当相关为0.5时，$d=d_Z$。当变量间相关变强时，例如$r=0.9$，我们可以得到$d=d_Z\sqrt{2(1-0.9)}$，当$d_Z$为1时，$d=0.45$。反过来，$d_Z=\frac{d}{\sqrt{2(1-r)}}$，所以当$r=0.9，d=1$时，我们可以得到$d_Z=2.24$。一些观点认为，当观测值都与估计效应量的“膨胀”强相关时，此相关可导致更容易地从“噪声”中区分出假设检验中的“信号”，由此又可导致数据间差异的标准差的降低，因此与d相比，$d_Z$的增长会导致非常明确的统计检验力上的优势。
+
+在被试内ANOVA中，没有与Cohen's f相对应的$f_Z$。针对包含两个组别的实验设计，正如Cohen（1988）所描述的，我们可以使用$f=\frac{1}{2}d$直接从Cohen's d计算Cohen's f。若$d=0.5$，则$f=0.25$。在G\*Power中，我们可以执行一个被试内2组实验设计ANOVA的统计检验力分析。我们将预期达到的统计检验力设为80%，通过非独立样本*t*检验来执行这个分析。之所以可行是因为当$d=d_Z$时，相关被设定为0.5，所以$f=\frac{1}{2}d$的转换有效。
+
+![G*Power示例](https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_1.png)
+
+(来自 [https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_1.png](https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_1.png))
+
+如果我们将相关改为0.7，并且保持其他设定不变，那么重复测量的先验统计检验力可得出样本量为21。那么相关的增加导致了统计检验力的增加。
+
+![G*Power示例](https://github.com/Lakens/ANOVApower/blob/master/vignettes/screenshots/gpower_11.png)
+
+(来自 [https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_11.png](https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_11.png))
+
+为了在G*P
+
+
+
+
+
+
 
 
 ## 2.4 PANGEA
