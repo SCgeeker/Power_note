@@ -411,7 +411,6 @@ design_result <- ANOVA_design(design = design,
 ```
 
 
-
 ```{r}
 nsims <- 1000 # 注：此处根据实际需要修改，例如上文提到的先设定成100，如果正确的话再修改为1000
 
@@ -852,7 +851,7 @@ power_result_vig_3 <- readRDS(file = "D:/temp/power_result_vig_3.rds")
 
 (来自 [https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_12.png](https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_12.png))
 
-我们甚至可以在G\*Power中使用SPSS的风格来计算Cohen's f。我们在G*Power中进行如上设定，然后点击'Options'，然后选择'as in SPSS'，然后点击OK，你会看到'Corr among rep measures'部分不见了。相关不需要单独输入，但是在Cohen's f之中。Cohen's f的原值为0.25，现为0.7024394。这与SPSS相同。这个值更大，并且与偏eta方相对应且包含了观测值之间的相关。
+我们甚至可以在G\*Power中使用SPSS的风格来计算Cohen's f。我们在G*Power中进行如上设定，然后点击'Options'，然后选择'as in SPSS'，然后点击OK，你会看到'Corr among rep measures'这个部分不见了。相关不需要单独输入，但是包含在Cohen's f之中。Cohen's f的原值为0.25，现为0.7024394，这个结果与SPSS的相同。目前这个值更大，并且与偏eta方相对应且包含了观测值之间的相关。
 
 ![G*Power示例](https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_14.png)
 
