@@ -691,16 +691,81 @@ $$\sigma_Z=\sigma\sqrt{2(1-\rho)}$$
 
 如果我们将相关改为0.7，并且保持其他设定不变，那么重复测量的先验统计检验力可得出样本量为21。那么相关的增加导致了统计检验力的增加。
 
-![G*Power示例](https://github.com/Lakens/ANOVApower/blob/master/vignettes/screenshots/gpower_11.png)
+![G*Power示例](https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_11.png)
 
 (来自 [https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_11.png](https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_11.png))
 
-为了在G*P
+为了在G\*Power中使用非独立样本*t*检验来复现这个分析，我们需要根据$d_Z=\frac{0.5}{\sqrt{2(1-0.7)}}$来调整$d_Z$，得到$d_Z=0.6454972$。如果在G*Power中的先验概率分析中输入这个值，可得到一致的结果（因为拥有两组或两次测量的重复测量ANOVA与非独立样本t检验一致）。这个例子说明变量间的相关总是会影响统计检验力分析，不论是非独立样本t检验还是重复测量ANOVA。因为非独立样本t检验使用$d_Z$，所以相关可能不是那么明显，但是考虑到d和$d_Z$之间的关系，相关一直都是在我们的考虑中，并且与被试间设计相比可以极大地为被试内设计提升统计检验力。
 
+![G*Power示例](https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_10.png)
 
+(来自 [https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_10.png](https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_10.png))
 
+我们也可以使用模拟来执行上述两种统计检验力分析。我们可以在模拟中将组数设置为2，$n=34$（根据G*Power可提供80.777%的统计检验力），变量重复测量的相关为0.5，alpha为0.05。在这种情况下，我们使用平均数为-0.25和0.25，标准差为1来模拟。因此，均差为0.5，Cohen's d为$0.5/1=0.5$。在这个例子中，我们将相关设置为0.5，结果为80.777%的统计检验力，简单效应的预估效应量为0.5。我们也可以使用$\frac{f^2}{f^2+1}$计算ANOVA的偏eta方，为0.05882353。
 
+```{r}
+K <- 2
+n <- 34
+sd <- 1
+r <- 0.5
+alpha = 0.05
+f <- 0.25
+f2 <- f^2
+ES <- f2/(f2+1)
+ES
+```
 
+```{r}
+mu <- mu_from_ES(K = K, ES = ES)
+design = paste(K,"w",sep="")
+labelnames <- c("speed", "fast", "slow")
+
+design_result <- ANOVA_design(design = design,
+                              n = n, 
+                              mu = mu, 
+                              sd = sd, 
+                              r = r, 
+                              labelnames = labelnames)
+```
+
+```{r}
+ANOVA_exact(design_result)
+```
+
+模拟的结果为80.777%。需要注意的是这个模拟为配对对比计算Cohen's $d_Z$，在此相关设定为0.5，为中等效应量。
+
+在上述G*Power的例子中，如果我们尝试增加相关并保持样本量一致,我们也应得到稍大的$d_Z$。在如下的模拟中，我们只修改了相关的值为0.7，这将使得$d_Z=0.6454972$。
+
+```{r}
+K <- 2
+n <- 34
+sd <- 1
+r <- 0.7
+alpha = 0.05
+f <- 0.25
+f2 <- f^2
+ES <- f2/(f2+1)
+ES
+```
+
+```{r}
+mu <- mu_from_ES(K = K, ES = ES)
+design = paste(K,"w",sep="")
+labelnames <- c("speed", "fast", "slow")
+
+design_result <- ANOVA_design(design = design,
+                              n = n, 
+                              mu = mu, 
+                              sd = sd, 
+                              r = r, 
+                              labelnames = labelnames)
+```
+
+```{r}
+ANOVA_exact(design_result)
+```
+
+##### 2.3.5.5.2 多组重复测量ANOVA的统计检验力
 
 
 
