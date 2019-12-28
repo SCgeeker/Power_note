@@ -767,6 +767,99 @@ ANOVA_exact(design_result)
 
 ##### 2.3.5.5.2 多组重复测量ANOVA的统计检验力
 
+我们来检验拥有3组被试内实验情况的重复测量实验，来解释一个重复测量的ANOVA来如何拓展非独立样本*t*检验。在两组被试内实验设计的例子中，我们提供了一个针对此类情形的特定的计算样本量的公式。假设正态分布和复合对称，并忽视两种检验中自由度的不同，相对于被试间实验设计所需要的样本量，在多于两组的被试内实验设计中的样本量为（见Maxwell和Delaney，2004，562页，公式47）：
+
+$$N_W=\frac{N_B(1-\rho)}{a}$$
+其中a是被试内水平的个数。
+
+##### 2.3.5.5.3 Cohen's f和Cohen's d之间的关系
+
+尽管在两组重复测量ANOVA的情况下，我们可以通过我们的检验与*t*检验和Cohen's d的对比来解释统计检验力分析的原则，但是当我们拥有多于两组的实验条件时就变得复杂了。直接解释如何计算ANOVA的统计检验力分析的Cohen's f和效应量更为有用。根据Cohen（1988）公式8.2.1和8.2.2，Cohen's f为：
+
+$$f=\sqrt{\frac{\frac{\sum(\mu-\bar{\mu})^2}{N}}{\sigma}}$$
+
+假设我们使用拥有3组情况的被试内实验设计，自变量为我们问被试在不同条件下醒来的情绪：当闹钟叫醒时、工作日自然醒时和周末自然醒时。基于试点数据，我们预期平均数为3.8、4.2和4.3（基于7点有效的情绪量表），标准差为0.9，非独立的测量值之间的相关为0.7。我们可以计算此ANOVA的Cohen's f和事后比较的Cohen's $d_Z$。
+
+```{r}
+mu <- c(3.8, 4.2, 4.3)
+sd <- 0.9
+f <- sqrt(sum((mu-mean(mu))^2)/length(mu))/sd #Cohen, 1988, formula 8.2.1 and 8.2.2
+f
+```
+
+```{r}
+r <- 0.7
+(4.2-3.8)/0.9/sqrt(2*(1-r))
+```
+
+```{r}
+(4.3-3.8)/0.9/sqrt(2*(1-r))
+```
+
+```{r}
+(4.3-4.2)/0.9/sqrt(2*(1-r))
+```
+
+当拥有多组时，Cohen's d或者$d_Z$和Cohen's f之间的关系变得复杂，因为此关系基于平均数的模式。Cohen（1988）讲述了三类模式的计算方法：最小变异（例如5个平均数为-0.25，0，0，0，0.25）、中等变异（例如5个平均数为-0.25，-0.25，0.25，0.25，0.25或-0.25，-0.25，-0.25，0.25，0.25）。针对这三种模式可根据公式由Cohen's d来计算Cohen's f，其中d是由最大的均值和最小的均值的差异来计算的效应量（如果最大的均值为0.25，最小的均值为-0.25，0.25-（-0.25）=0.5.所以d是0.5除以标准差0.9）。在我们的例子中，d为（4.3-3.8）/0.9 = 0.5555556。如果我们将此值除以$\sqrt{2(1-r)}$，我们可以得到$d_Z=0.5555556/0.7745967=0.7172191$。如果均值和标准差是已知的，可由这些值直接计算Cohen's f。
+
+我们可以使用模拟来计算被试内设计的统计检验力。我们将组别数设置为3，n = 20，变量间相关为0.8。如果真正的效应量f是0.25，alpha是0.05，那么统计检验力为96.9%。
+
+在这种情况中，我们使用均值-0.3061862，0.0000000和0.3061862，并且设定标准差为1。
+
+```{r}
+K <- 3
+n <- 20
+sd <- 1
+r <- 0.8
+alpha = 0.05
+f <- 0.25
+f2 <- f^2
+ES <- f2/(f2+1)
+ES
+```
+
+```{r}
+mu <- mu_from_ES(K = K, ES = ES)
+sqrt(sum((mu-mean(mu))^2)/length(mu))/sd #Cohen, 1988, formula 8.2.1 and 8.2.2
+```
+
+```{r}
+design = paste(K,"w",sep="")
+labelnames <- c("speed", "fast", "medium", "slow")
+
+design_result <- ANOVA_design(design = design,
+                              n = n, 
+                              mu = mu, 
+                              sd = sd, 
+                              r = r, 
+                              labelnames = labelnames)
+```
+
+```{r}
+nsims <- 1000 # 注：此处根据实际需要修改，例如上文提到的先设定成100，如果正确的话再修改为1000
+power_result_vig_3 <- ANOVA_power(design_result, nsims = nsims)
+# reduce file size for github - only save what is needed
+power_result_vig_3$sim_data <- NULL
+# power_result_vig_3$plot1 <- NULL
+power_result_vig_3$plot2 <- NULL
+saveRDS(power_result_vig_3, file = "D:/temp/power_result_vig_3.rds")
+power_result_vig_3 <- readRDS(file = "D:/temp/power_result_vig_3.rds")
+```
+
+模拟的结果确实非常接近96.9%。我们可以看到G*Power中一致的统计检验力预估的结果
+
+![G*Power示例](https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_12.png)
+
+(来自 [https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_12.png](https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_12.png))
+
+我们甚至可以在G\*Power中使用SPSS的风格来计算Cohen's f。我们在G*Power中进行如上设定，然后点击'Options'，然后选择'as in SPSS'，然后点击OK，你会看到'Corr among rep measures'部分不见了。相关不需要单独输入，但是在Cohen's f之中。Cohen's f的原值为0.25，现为0.7024394。这与SPSS相同。这个值更大，并且与偏eta方相对应且包含了观测值之间的相关。
+
+![G*Power示例](https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_14.png)
+
+(来自 [https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_14.png](https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_14.png))
+
+
+
 
 
 ## 2.4 PANGEA
