@@ -857,6 +857,70 @@ power_result_vig_3 <- readRDS(file = "D:/temp/power_result_vig_3.rds")
 
 (来自 [https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_14.png](https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_14.png))
 
+#### 2.3.5.6 被试内实验设计的2X2 ANOVA
+
+我们可以模拟一个设定了alpha、样本量和效应量的two-way ANOVA来达到特定的统计检验力。我们可以试着在G\*Power中的*F*-test, ANOVA: Repeated measures, within-between interaction来执行统计检验力分析。
+
+![G*Power示例](https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_5.png)
+
+(来自 [https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_5.png](https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_5.png))
+
+对于2-way交互作用，如果总样本量为46，统计检验力应为91.25%。因为被试间因素有两个水平，所以我们有2组（并且每组有2次重复测量）。
+
+```{r}
+mu <- c(-0.25, 0.25, 0.25, -0.25)
+n <- 23
+sd <- 1
+r <- 0.5
+design = "2w*2b"
+design_result <- ANOVA_design(design = design,
+                              n = n, 
+                              mu = mu, 
+                              sd = sd, 
+                              r = r)
+```
+
+```{r}
+ANOVA_exact(design_result)
+```
+
+我们可以将相关调整为0.7进而模拟同样的two-way ANOVA。统计检验力应增加至98.98%。
+
+![G*Power示例](https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_6.png)
+
+(来自 [https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_6.png](https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_6.png))
+
+```{r}
+mu <- c(-0.25, 0.25, 0.25, -0.25)
+n <- 23
+sd <- 1
+r <- 0.7
+design = "2w*2b"
+design_result <- ANOVA_design(design = design,
+                              n = n, 
+                              mu = mu, 
+                              sd = sd, 
+                              r = r)
+```
+
+```{r}
+ANOVA_exact(design_result)
+```
+
+#### 2.3.5.7 被试间实验设计的two-way ANOVA
+
+在ANOVA中的交互作用的效应量依赖于均值的模式。假如研究者计划做一项2*2的实验：人工智能的声音是高兴或者伤心和该声音听起来更像机器人或者更像人类。我们可以期待产生不同的结果，例如不论是对于像人类的声音还是像机器人的声音，高兴的声音比伤心的声音都更让人喜欢；或者高兴的类人声比伤心的类人声更让人喜欢，而在类机器人声中高兴与伤心并无差异，或者甚至是在类机器人声中人们更喜欢伤心的声音（Marvin-the-Depressed-Robot效应）。在第一个情况中，我们将只观测声音的主效应，但是在另外两种可能的情况下，在声音的类人性和声音的情绪基调上存在交互作用。我们可以通过每组拥有80个被试的2X2的被试间实验设计的交互作用来模拟这个统计检验力（如下图所示每种实验条件的期望的均值）。
+
+![G*Power示例](https://github.com/Lakens/ANOVApower/raw/master/README_files/figure-gfm/mean-plot-1.png)
+
+(来自 [https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_6.png](https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_6.png))
+
+从数学上来说，交互作用是由每一个单元格的均值减去整体的均值、每一行的边缘均值减去整体的均值和每一列的边缘均值减去整体均值来计算的。例如，对于高兴的类人声的条件来说就是$1-(0.5+0.5+0.5)=-0.5$。由计算可得，每个单元格的值为-0.5，0.5，0.5和-0.5。Cohen's f为$f=\frac{\sqrt{\frac{(-0.5)^2+0.5^2+0.5^2+(-0.5)^2}{4}}}{2}=0.25$。模拟的结果显示当每组有80名被试时，统计检验力为99.379%。
+
+
+
+
+
 
 
 
