@@ -246,7 +246,7 @@ ANOVApower 的目的是帮助研究者容易简便地模拟 ANOVA 实验设计�
 如果这8个均值分别为 mu = c(1, 2, 3, 4, 5, 6, 7, 8)，则如下图所示：
 ```
 
-![示例](https://raw.githubusercontent.com/Lakens/ANOVApower/master/README_files/figure-gfm/unnamed-chunk-1-1.png)
+![均值示例](https://raw.githubusercontent.com/Lakens/ANOVApower/master/README_files/figure-gfm/unnamed-chunk-1-1.png)
 
 (来自 [https://raw.githubusercontent.com/Lakens/ANOVApower/master/README_files/figure-gfm/unnamed-chunk-1-1.png](https://raw.githubusercontent.com/Lakens/ANOVApower/master/README_files/figure-gfm/unnamed-chunk-1-1.png))
 
@@ -911,7 +911,7 @@ ANOVA_exact(design_result)
 
 在ANOVA中的交互作用的效应量依赖于均值的模式。假如研究者计划做一项2*2的实验：人工智能的声音是高兴或者伤心和该声音听起来更像机器人或者更像人类。我们可以期待产生不同的结果，例如不论是对于像人类的声音还是像机器人的声音，高兴的声音比伤心的声音都更让人喜欢；或者高兴的类人声比伤心的类人声更让人喜欢，而在类机器人声中高兴与伤心并无差异，或者甚至是在类机器人声中人们更喜欢伤心的声音（Marvin-the-Depressed-Robot效应）。在第一个情况中，我们将只观测声音的主效应，但是在另外两种可能的情况下，在声音的类人性和声音的情绪基调上存在交互作用。我们可以通过每组拥有80个被试的2X2的被试间实验设计的交互作用来模拟这个统计检验力（如下图所示每种实验条件的期望的均值）。
 
-![G*Power示例](https://github.com/Lakens/ANOVApower/raw/master/README_files/figure-gfm/mean-plot-1.png)
+![均值的模式](https://github.com/Lakens/ANOVApower/raw/master/README_files/figure-gfm/mean-plot-1.png)
 
 (来自 [https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_6.png](https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/gpower_6.png))
 
@@ -974,6 +974,56 @@ Potvin和Schutz（2000）模拟一个大范围的重复测量设计。给出的�
 ![相关矩阵](https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/PS2000.gif)
 
 (来自 [https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/PS2000.gif](https://github.com/Lakens/ANOVApower/raw/master/vignettes/screenshots/PS2000.gif))
+
+方差设定为1（所以在模拟中所有的协方差矩阵是相同的）。在这个特定的例子中，白色区域是与A的主效应的相关相关联的（这些单元格与B拥有同样的水平，但是对A有不同的水平）。灰色的区域与B的主效应相关（这些单元格与A有相同的水平，但是与B的水平不同）。最终，黑色的区域与AXB的交互相关（与A和B的水平数均不同，对角线上的单元格拥有与A和B相同的水平。
+
+Potvin和Schulz（2000）检验了2X2的被试内ANOVA设计的统计检验力并得出误差方差的近似值。对于一个拥有2个被试内因素（A和B）的设计来说是：
+
+对于A的主效应：$\sigma_e^2=\sigma^2(1-\bar{\rho}_A)+\sigma^2(q-1)(\bar{\rho}_B-\bar{\rho}_{AB})$
+
+对于B的主效应：$\sigma_e^2=\sigma^2(1-\bar{\rho}_B)+\sigma^2(p-1)(\bar{\rho}_A-\bar{\rho}_{AB})$
+
+对于A和B的交互：$\sigma_e^2=\sigma^2(1-\rho_{max})-\sigma^2(\bar{\rho}_{min}-\bar{\rho}_{AB})$
+
+我们首先来模拟一个2X2 ANOVA被试内实验设计。
+
+```{r}
+mu = c(2,1,4,2) 
+n <- 20
+sd <- 5
+r <- c(
+  0.8, 0.5, 0.4,
+       0.4, 0.5,
+            0.8
+  )
+
+design = "2w*2w"
+labelnames = c("A", "a1", "a2", "B", "b1", "b2")
+design_result <- ANOVA_design(design = design,
+                              n = n, 
+                              mu = mu, 
+                              sd = sd, 
+                              r = r, 
+                              labelnames = labelnames)
+```
+
+```{r}
+nsims <- 1000 # 注：此处根据实际需要修改，例如上文提到的先设定成100，如果正确的话再修改为1000
+power_result_vig_4 <- ANOVA_power(design_result, nsims = nsims)
+power_result_vig_4$sim_data <- NULL
+# power_result_vig_4$plot1 <- NULL
+power_result_vig_4$plot2 <- NULL
+saveRDS(power_result_vig_4, file = "D:/temp/power_result_vig_4.rds")
+power_result_vig_4 <- readRDS(file = "D:/temp/power_result_vig_4.rds")
+```
+
+我们也可以使用exact模拟。
+
+```{r}
+ANOVA_exact(design_result = design_result)
+```
+
+我们可以看到26.9、64.2和26.9都与exact模拟的结果一致。
 
 
 ## 2.4 PANGEA
