@@ -169,13 +169,17 @@ digraph hierarchy {
   </tr>
 </table>
 
-# 2 可用软件
+# 2 模拟取向可用套件
 
+## 2.1 ANOVAPower
 
-## 2.1 G*Power
+https://osf.io/pn8mc/
 
+## 2.2 Building Mixed-effects model with simulation data
 
-## 2.2 jPower
+https://osf.io/3cz2e/
+
+# 3 逼进取向可用软件
 
 
 ## 2.3 Superpower
@@ -1011,17 +1015,24 @@ ANOVA_exact(design_result = design_result)
 ```
 
 我们可以看到26.9、64.2和26.9都与exact模拟的结果一致。
+=======
 
 
-## 2.4 PANGEA
+## 3.1 G*Power
 
 
-## 2.5 LMM Power
+## 3.2 jPower
 
 
-## 2.6 power analysis in fMRI
+## 3.3 PANGEA
 
 
-## 2.7 Bayesian power analysis 
+## 3.4 LMM Power
+
+
+## 3.5 power analysis in fMRI
+
+
+## 3.6 Bayesian power analysis 
 
 
